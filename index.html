@@ -55,6 +55,7 @@
           interval = setInterval(() => {
             duration--;
             ele.innerHTML = duration;
+            window.document.title = duration + '| TimeBlocks'
             if (duration === 0) {
                 ele.innerHTML = 'BLOCK COMPLETED';
                 blocks.innerHTML = blocks.innerHTML += input.value + '<br>';
