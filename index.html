@@ -39,13 +39,13 @@
         var block = document.getElementById('block');      
         var blocks = document.getElementById('completed');
         function focus() {
+            startTime.innerHTML = new Date(Date.now()).toLocaleString();
             input.focus();
         }
 
         function start() {
           duration = 1200;
           ele.innerHTML = duration;
-          startTime.innerHTML = new Date(Date.now()).toLocaleString();
           block.innerHTML = input.value;
           interval && clearInterval(interval);
           interval = setInterval(() => {
