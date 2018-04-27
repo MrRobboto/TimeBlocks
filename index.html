@@ -88,7 +88,7 @@
       // Let's check whether notification permissions have already been granted
       else if (Notification.permission === 'granted') {
         // If it's okay let's create a notification
-        var notification = new Notification('Block ' + block + ' Completed!');
+        sendNotification('Block ' + block + ' Completed!');
       }
 
       // Otherwise, we need to ask the user for permission
@@ -96,10 +96,16 @@
         Notification.requestPermission(function (permission) {
           // If the user accepts, let's create a notification
           if (permission === 'granted') {
-            var notification = new Notification('Block ' + block + ' Completed!');
+            sendNotification('Block ' + block + ' Completed!');
           }
         });
       }
+    }
+
+    function sendNotification(text) {
+      var notification = new Notification(text);
+      notification.icon = 'http://www.vsmart2u.com/wp-content/uploads/2017/11/smart-alarm.png'
+      setTimeout(() => notification.close(), 2000)
     }
 
     document.getElementById('form').addEventListener("submit", function (event) {
