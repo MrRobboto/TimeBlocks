@@ -103,8 +103,7 @@
     }
 
     function sendNotification(text) {
-      var notification = new Notification(text);
-      notification.icon = 'http://www.vsmart2u.com/wp-content/uploads/2017/11/smart-alarm.png';
+      var notification = new Notification(text, { icon: 'http://www.vsmart2u.com/wp-content/uploads/2017/11/smart-alarm.png'});
       setTimeout(() => notification.close(), 5000);
     }
 
