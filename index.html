@@ -1,74 +1,113 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>TimeBlocks</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <style>
-        h1, h2, h3, h4, h5, h6 {
-            margin: 0;
+
+<head>
+  <meta charset="utf-8">
+  <title>TimeBlocks</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body onload="focus()">
+  <h1>TimeBlocks</h1>
+  <p>20 Minute Focus Slots to Intermittently Push Full-Throttle and Mitigate
+    <b>Distraction.</b>
+  </p>
+  <br>
+  <form id="form">
+    <input id="input" type="text" />
+    <button type="button" onclick="start()">START</button>
+  </form>
+  <br>
+  <br>
+  <h3>Current Block:</h3>
+  <h1 id="block"></h1>
+  <br>
+  <br>
+  <h6 style="font-size: 5rem;">Time Remaining:</h6>
+  <h6 id="duration" style="font-size: 5rem;color:blue;"></h6>
+  <br>
+  <h3>Completed Blocks Since&nbsp;
+    <b id="start-time" style="color: blue;"></b>:</h3>
+  <p id="completed"></p>
+
+  <div style="position: fixed; bottom: 0; right: 0;">
+    <p style="padding-right:1rem;">Last Updated:&nbsp;
+      <b>4/26/2018, 3:29:00 PM</b>
+    </p>
+  </div>
+
+  <script>
+    var interval;
+    var duration = 1200;
+    var ele = document.getElementById('duration');
+    var startTime = document.getElementById('start-time');
+    var input = document.getElementById('input');
+    var block = document.getElementById('block');
+    var blocks = document.getElementById('completed');
+
+    function focus() {
+      startTime.innerHTML = new Date(Date.now()).toLocaleString();
+      input.focus();
+    }
+
+    function start() {
+      duration = 5;
+      ele.innerHTML = duration;
+      block.innerHTML = input.value;
+      interval && clearInterval(interval);
+      interval = setInterval(() => {
+        duration--;
+        ele.innerHTML = duration;
+        window.document.title = duration + ' | TimeBlocks'
+        if (duration === 0) {
+          ele.innerHTML = 'BLOCK COMPLETED';
+          window.document.title = 'COMPLETED | TimeBlocks';
+          blocks.innerHTML = blocks.innerHTML += input.value + '<br>';
+          notify(input.value);
+          clearInterval(interval);
         }
-    </style>
-  </head>
-  <body onload="focus()">
-      <h1>TimeBlocks</h1>
-      <p>20 Minute Focus Slots to Intermittently Push Full-Throttle and Mitigate <b>Distraction.</b></p>
-      <br>
-      <form id="form">
-        <input id="input" type="text"/>
-        <button type="button" onclick="start()">START</button>
-      </form>
-      <br>
-      <br>
-      <h3>Current Block:</h3>
-      <h1 id="block"></h1>
-      <br>
-      <br>
-      <h6 style="font-size: 5rem;">Time Remaining:</h6>
-      <h6 id="duration" style="font-size: 5rem;color:blue;"></h6>
-      <br>
-      <h3>Completed Blocks Since&nbsp;<b id="start-time" style="color: blue;"></b>:</h3>
-      <p id="completed"></p>
+      }, 1000);
+    }
 
-      <div style="position: fixed; bottom: 0; right: 0;">
-        <p style="padding-right:1rem;">Last Updated:&nbsp;<b>4/26/2018, 3:29:00 PM</b></p>
-      </div>
+    function notify(block) {
+      // Let's check if the browser supports notifications
+      if (!('Notification' in window)) {
+        alert('This browser does not support desktop notification');
+      }
 
-      <script>
-        var interval;
-        var duration = 1200;
-        var ele = document.getElementById('duration');
-        var startTime = document.getElementById('start-time');
-        var input = document.getElementById('input');
-        var block = document.getElementById('block');      
-        var blocks = document.getElementById('completed');
-        function focus() {
-            startTime.innerHTML = new Date(Date.now()).toLocaleString();
-            input.focus();
-        }
+      // Let's check whether notification permissions have already been granted
+      else if (Notification.permission === 'granted') {
+        // If it's okay let's create a notification
+        var notification = new Notification('Block ' + block + ' Completed!');
+      }
 
-        function start() {
-          duration = 1200;
-          ele.innerHTML = duration;
-          block.innerHTML = input.value;
-          interval && clearInterval(interval);
-          interval = setInterval(() => {
-            duration--;
-            ele.innerHTML = duration;
-            window.document.title = duration + ' | TimeBlocks'
-            if (duration === 0) {
-                ele.innerHTML = 'BLOCK COMPLETED';
-                window.document.title = 'COMPLETED | TimeBlocks';
-                blocks.innerHTML = blocks.innerHTML += input.value + '<br>';
-                clearInterval(interval);
-            }
-          }, 1000);
-        }
-        document.getElementById('form').addEventListener("submit", function (event) {
-            event.preventDefault();
-
-            start();
+      // Otherwise, we need to ask the user for permission
+      else if (Notification.permission !== 'denied') {
+        Notification.requestPermission(function (permission) {
+          // If the user accepts, let's create a notification
+          if (permission === 'granted') {
+            var notification = new Notification('Block ' + block + ' Completed!');
+          }
         });
-      </script>
-  </body>
+      }
+    }
+
+    document.getElementById('form').addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      start();
+    });
+  </script>
+</body>
+
 </html>
