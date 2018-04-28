@@ -7,12 +7,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
     @import url('https://fonts.googleapis.com/css?family=Titillium+Web');
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
+    h1, h2, h3, h4, h5, h6 {
       margin: 0;
     }
     html {
@@ -27,14 +22,17 @@
 
 <body onload="focus()">
   <h1 style="color: #2196F3;">TimeBlocks</h1>
-  <p>20 Minute Focus Slots to Intermittently Push Full-Throttle and Mitigate
+  <p>Set Focus Slots to Intermittently Push Full-Throttle and Mitigate
     <b>Distraction.</b>
   </p>
   <br>
+  <h3>Set Block Size (Minutes):</h3>
+  <input id="size-input" type="number" value=20 style="font-size: xx-large;" />
   <h3>Start Block:</h3>
   <form id="form">
     <input id="input" type="text" style="font-size: -webkit-xxx-large;" />
     <button type="button" onclick="start()" style="font-size: -webkit-xxx-large;">START</button>
+    <button type="button" onclick="cancel()" style="font-size: -webkit-xxx-large;">CANCEL</button>
   </form>
   <br>
   <h6 style="font-size: 5rem;">Time Remaining:</h6>
@@ -46,7 +44,7 @@
 
   <div style="position: fixed; bottom: 0; right: 0;">
     <p style="padding-right:1rem;">Last Updated:&nbsp;
-      <b>4/27/2018, 8:33:00 PM</b>
+      <b>4/27/2018, 11:06:00 PM</b>
     </p>
   </div>
 
@@ -57,6 +55,7 @@
     var startTime = document.getElementById('start-time');
     var input = document.getElementById('input');
     var blocks = document.getElementById('completed');
+    var size = document.getElementById('size-input');
 
     function focus() {
       startTime.innerHTML = new Date(Date.now()).toLocaleString();
@@ -64,59 +63,68 @@
     }
 
     function start() {
-      duration = 2000;
+      duration = size.value * 60;
       ele.innerHTML = duration;
       interval && clearInterval(interval);
       interval = setInterval(() => {
         duration--;
         ele.innerHTML = duration;
-        window.document.title = duration + ' | TimeBlocks'
+        window.document.title = duration + ' | TimeBlocks';
         notify(duration + ' Seconds Left...');
         if (duration === 0) {
+          var a = new Audio('/coins.mp3');
+          a.volume = .5;
+          a.play();
+          var msg = new SpeechSynthesisUtterance();
+          msg.voiceURI = 'Google UK English Female';
+          msg.volume = .8; // 0 to 1
+          msg.rate = .9; // 0.1 to 10
+          msg.pitch = 1; //0 to 2
+          msg.lang = 'en-GB';
+          msg.text = input.value + ' Block Completed';
+          setTimeout(() => speechSynthesis.speak(msg), 1000);
+          
+          notify('Block Completed', true);
           ele.innerHTML = 'BLOCK COMPLETED';
           window.document.title = 'COMPLETED | TimeBlocks';
           blocks.innerHTML = blocks.innerHTML += input.value + '<br>';
-          notify('Block ' + input.value + ' Completed!');
           clearInterval(interval);
         }
       }, 1000);
     }
 
-    function notify(text) {
-      // Let's check if the browser supports notifications
+    function cancel() {
+      clearInterval(interval);
+      ele.innerHTML = 0;
+      window.document.title = 'TimeBlocks';
+      notify('Block Canceled', true);
+    }
+
+    function notify(text, fade) {
       if (!('Notification' in window)) {
         alert('This browser does not support desktop notification');
-      }
-
-      // Let's check whether notification permissions have already been granted
-      else if (Notification.permission === 'granted') {
-        // If it's okay let's create a notification
-        sendNotification(text);
-      }
-
-      // Otherwise, we need to ask the user for permission
-      else if (Notification.permission !== 'denied') {
+      } else if (Notification.permission === 'granted') {
+        sendNotification(text, fade);
+      } else if (Notification.permission !== 'denied') {
         Notification.requestPermission(function (permission) {
-          // If the user accepts, let's create a notification
           if (permission === 'granted') {
-            sendNotification(text);
+            sendNotification(text, fade);
           }
         });
       }
     }
 
-    function sendNotification(text) {
+    function sendNotification(text, fade) {
       var notification = new Notification(text, { 
         icon: 'http://www.vsmart2u.com/wp-content/uploads/2017/11/smart-alarm.png',
         tag: 'timeblock',
-        body: input.value
+        body: 'Current Block: ' + input.value
       });
-      // setTimeout(() => notification.close(), 3000);
+      fade && setTimeout(() => notification.close(), 2000);
     }
 
     document.getElementById('form').addEventListener("submit", function (event) {
       event.preventDefault();
-
       start();
     });
   </script>
