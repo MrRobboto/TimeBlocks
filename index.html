@@ -75,7 +75,6 @@
         if (duration === 0) {
           completedCount++;
           var a = new Audio('snd.mp3');
-          a.volume = 1;
           a.play();
           var msg = new SpeechSynthesisUtterance();
           msg.voiceURI = 'Google UK English Female';
