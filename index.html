@@ -73,11 +73,11 @@
         notify(duration + ' Seconds Left...');
         if (duration === 0) {
           var a = new Audio('snd.mp3');
-          a.volume = .5;
+          a.volume = 1;
           a.play();
           var msg = new SpeechSynthesisUtterance();
           msg.voiceURI = 'Google UK English Female';
-          msg.volume = .8; // 0 to 1
+          msg.volume = 1; // 0 to 1
           msg.rate = .9; // 0.1 to 10
           msg.pitch = 1; //0 to 2
           msg.lang = 'en-GB';
