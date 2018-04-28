@@ -56,7 +56,6 @@
     var ele = document.getElementById('duration');
     var startTime = document.getElementById('start-time');
     var input = document.getElementById('input');
-    var block = document.getElementById('block');
     var blocks = document.getElementById('completed');
 
     function focus() {
@@ -67,7 +66,6 @@
     function start() {
       duration = 2000;
       ele.innerHTML = duration;
-      block.innerHTML = input.value;
       interval && clearInterval(interval);
       interval = setInterval(() => {
         duration--;
