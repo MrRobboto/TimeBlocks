@@ -72,7 +72,7 @@
         window.document.title = duration + ' | TimeBlocks';
         notify(duration + ' Seconds Left...');
         if (duration === 0) {
-          var a = new Audio('/coins.mp3');
+          var a = new Audio('coins.mp3');
           a.volume = .5;
           a.play();
           var msg = new SpeechSynthesisUtterance();
