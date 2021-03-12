@@ -118,7 +118,7 @@
 
     function sendNotification(text, fade) {
       var notification = new Notification(text, { 
-        icon: null,
+        icon: undefined,
         tag: 'timeblock',
         body: 'Current Block: ' + input.value
       });
