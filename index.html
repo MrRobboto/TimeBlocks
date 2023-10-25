@@ -6,23 +6,341 @@
   <title>TimeBlocks</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="shortcut icon" href="favicon.ico" />
+
+  
   <style>
     @import url('https://fonts.googleapis.com/css?family=Titillium+Web');
     h1, h2, h3, h4, h5, h6 {
       margin: 0;
+      text-shadow: 1px 1px 0.1em #00000054;
     }
     html {
       width: 100%;
       height: 100%;
       background: #000000de;
+      background: linear-gradient(135deg, #6551d9, #201b46);
       color: #ffffffcc;
       font-family: 'Titillium Web', sans-serif;
+    }
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: fixed;
+      top:0; right: 0; bottom: 0; left: 0;
+    }
+
+    .header {
+      position:fixed;
+      top:0; left:  0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .main-container {
+      height: 100%;
+      width: 95%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .block-controls {
+      padding: 1em;
+      display: flex;
+      width: 100%;
+      /* flex: 0 0 auto; */
+      justify-content: center;
+    }
+
+    .block-inputs {
+      margin-right: 1em;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      flex: 0 0 auto;
+    }
+
+    .block-input {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+      position: relative;
+      flex: 0 0 auto;
+      margin-bottom: 1em;
+    }
+
+    .block-input label {
+      margin-right: 1em;
+      font-size: 3em;
+      text-shadow: 1px 1px 0.1em #00000054;
+    }
+
+    .block-inputs input {
+      padding-left: .2em;
+      /* display: block; */
+      font-size: 5em;
+      background: transparent;
+      border: none;
+      outline: none;
+      border-radius: .2em;
+      box-shadow: inset 0.3em 0 0.2em -0.22em black;
+      display: flex;
+      flex: 0 0 0px;
+      flex: 0 0 0px;
+      width: 400px;
+      color: #8268d9;
+      text-shadow: 1px 1px 0.1em #00000030;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield; /* This removes the arrows/spinners in Firefox */
+    }
+    .input-wrapper {
+      position: relative;
+      flex: 0 0 auto;
+      display: flex;
+    }
+    .input-wrapper::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      width: 3px;
+      height: 70%;
+      top: 50%;
+      transform: translatey(-50%);
+      right: calc(100% - .2em);
+      /* border-radius: 50%; */
+      box-shadow: 0 0 .66em .1em #2196F3;
+      /* font-size: 1em; */
+      z-index: -1;
+      background: transparent;
+    }
+
+    .block-counter {
+      position: relative;
+      width: 40em; height: 40em;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 3em #0b002626;
+      background: #2a284f00;
+      cursor: pointer;
+    }
+    .block-counter::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      width: 100%; height: 100%;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      box-shadow: inset 0 0 3em #0b002626;
+    }
+    .block-counter::after {
+      content: " ";
+      display: block;
+      position: absolute;
+      width: calc(100% - 10em);
+      height: calc(100% - 10em);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      box-shadow: 0 0 1em 1.5em #0000007a;
+    }
+
+    .bc-inner-shad {
+      position: absolute;
+      width: calc(100% - 10em);
+      height: calc(100% - 10em);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      box-shadow: inset 0 0 .5em #0000007a;
+    }
+
+    .bc-ring-plate {
+      display: block;
+      /* font-size: 7em; */
+      position: absolute;
+      width: calc(100% - 10em);
+      height: calc(100% - 10em);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: linear-gradient(135deg, #504b6b, #595667);
+      z-index: 5000;
+      box-shadow: inset 0 0 .5em .25em #1404337d;
+    }
+
+    .bc-ring-plate::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      width: 100%; height: 100%;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      box-shadow: 0 0 .66em .25em #2196f3ad;
+    }
+
+    .bc-inner-hole {
+      position: absolute;
+      width: calc(100% - 8em);
+      height: calc(100% - 8em);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      /* background: #0e8643; */
+      background: radial-gradient(#00ff3f80 0%, #05040d80 60%, #0f0221de 65%, #241e2e 80%);
+      /* box-shadow: inset 0 0 .3em 1em #0000007a; */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-shadow: .2em .2em 2em #000000e0;
+    }
+    .bc-inner-hole::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      box-shadow: inset 0 0 .66em .25em #2269a1ad;
+      z-index: -1
+    }
+    .bc-inner-hole::after {
+      content: " ";
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      box-shadow: 0 0 3em #050219;
+    }
+    .counter {
+      font-size: 7em;
+    }
+
+    .complete-blocks-toggle {
+      position: fixed;
+      top: 1em; right: 1em;
+      width: 2em; height: 2em;
+      box-shadow: 0 0 .25em #0000008a;
+      cursor: pointer;
+      border-radius: .25em;
+      background: #432d9f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #8268d9;
+    }
+
+    .complete-blocks-list {
+      display: none;
+      position: absolute;
+      top: calc(100% + 1em);
+      right: 0;
+      background: #442d9f42;
+      border-radius: .5em;
+      font-size: .6em;
+      color: #9683d7;
+      box-shadow: 0 0 .25em #00000028;
+      white-space: nowrap;
+      padding: 1em;
+      margin: 0;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .complete-blocks-list.open {
+      display: flex;
+    }
+    
+    .complete-blocks-list p, .complete-blocks-list h3 {
+      margin: 0;
+    }
+
+    .comp-list-min {
+      color: rgba(0, 255, 242, 0.466);
+    }
+    #completed {
+      text-align: right;
     }
   </style>
 </head>
 
+
+
+
+  
 <body onload="focus()">
-  <h1 style="color: #2196F3;">TimeBlocks</h1>
+
+
+
+  
+  <div class="header"><h1 style="color: #2196F3;">TimeBlocks</h1></div>
+
+  <section class="main-container">
+    <section class="block-controls">
+      
+      <div class="block-inputs">
+        <div class="block-input">
+          <label>Block Size</label>
+          <form id="form-one" class="input-wrapper"> <input id="size-input" type="number" min="0" /> </form>
+        </div>
+        <br>
+        <div class="block-input">
+          <label>Focus</label>
+          <form id="form-two" class="input-wrapper"><input id="input" /></form>
+        </div>
+      </div>
+
+      
+      <div class="block-counter" onclick="start()">
+        <div class="bc-inner-shad"></div>
+        <div class="bc-ring-plate">
+          <div id="center-light" class="bc-inner-hole">
+            <span id="duration" class="counter">0m</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="complete-blocks-toggle" onclick="toggleTray()">
+        C
+        <div id="tray" class="complete-blocks-list">
+          <h3>Completed Blocks Since</h3>
+          <div><b id="start-time" style="color: #2196F3;"></b><b id="start-time" style="color: #2196F3;">:</b></div>
+          <p id="completed"></p>
+        </div>
+      </div>
+    </section>
+  </section>
+
+<!-- 
+
+  
   <p>Set Focus Slots to Intermittently Push Full-Throttle and Mitigate
     <b>Distraction.</b>
   </p>
@@ -47,89 +365,12 @@
     <p style="padding-right:1rem;">Last Updated:&nbsp;
       <b>4/27/2018, 11:06:00 PM</b>
     </p>
-  </div>
+  </div> -->
 
-  <script>
-    var interval;
-    var duration = 1200;
-    var ele = document.getElementById('duration');
-    var startTime = document.getElementById('start-time');
-    var input = document.getElementById('input');
-    var blocks = document.getElementById('completed');
-    var size = document.getElementById('size-input');
-    var completedCount = 0;
 
-    function focus() {
-      startTime.innerHTML = new Date(Date.now()).toLocaleString();
-      input.focus();
-    }
 
-    function start() {
-      duration = size.value * 60;
-      ele.innerHTML = duration;
-      interval && clearInterval(interval);
-      interval = setInterval(() => {
-        duration--;
-        ele.innerHTML = duration;
-        window.document.title = duration + ' | TimeBlocks';
-        notify(duration + ' Seconds Left...');
-        if (duration === 0) {
-          completedCount++;
-          var a = new Audio('snd.mp3');
-          a.play();
-          var msg = new SpeechSynthesisUtterance();
-          msg.voiceURI = 'Google UK English Female';
-          msg.volume = 1; // 0 to 1
-          msg.rate = .9; // 0.1 to 10
-          msg.pitch = 1; //0 to 2
-          msg.lang = 'en-GB';
-          msg.text = input.value + ' Block Completed';
-          setTimeout(() => speechSynthesis.speak(msg), completedCount > 1 ? 1000 : 2500);
-          
-          notify('Block Completed', true);
-          ele.innerHTML = 'BLOCK COMPLETED';
-          window.document.title = 'COMPLETED | TimeBlocks';
-          blocks.innerHTML = blocks.innerHTML += input.value + '<br>';
-          clearInterval(interval);
-        }
-      }, 1000);
-    }
 
-    function cancel() {
-      clearInterval(interval);
-      ele.innerHTML = 0;
-      window.document.title = 'TimeBlocks';
-      notify('Block Canceled', true);
-    }
-
-    function notify(text, fade) {
-      if (!('Notification' in window)) {
-        alert('This browser does not support desktop notification');
-      } else if (Notification.permission === 'granted') {
-        sendNotification(text, fade);
-      } else if (Notification.permission !== 'denied') {
-        Notification.requestPermission(function (permission) {
-          if (permission === 'granted') {
-            sendNotification(text, fade);
-          }
-        });
-      }
-    }
-
-    function sendNotification(text, fade) {
-      var notification = new Notification(text, { 
-        icon: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimage.flaticon.com%2Ficons%2Fpng%2F512%2F595%2F595513.png&f=1&nofb=1',
-        tag: 'timeblock',
-        body: 'Current Block: ' + input.value
-      });
-      fade && setTimeout(() => notification.close(), 2000);
-    }
-
-    document.getElementById('form').addEventListener("submit", function (event) {
-      event.preventDefault();
-      start();
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 
 </html>
